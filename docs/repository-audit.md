@@ -21,7 +21,7 @@ Reviewed on 2026-10-15 after integrating JobTrending.
 | Research commands required a database that installation did not create. | Initialize the local empty database during setup and expose the missing batch pipeline commands. An isolated first-run pipeline test runs the scripts. |
 | The skill audit rejected valid zero-match skills. | Allow zero counts while retaining evidence/count checks. The fixture pipeline includes zero-match skills. |
 | Reviewed-evidence export could accept malformed verdict values. | Validate boolean relevance, nonempty reasons, duplicate IDs, and exact candidate coverage. A negative fixture is rejected. |
-| Browser discovery and supported Node versions depended on the original environment. | Discover installed browsers on Windows/macOS/Linux, support an explicit path and installed Chromium, declare supported Node 20/22 lines, reuse that browser for collection/PDF, skip the duplicate Puppeteer download, and add clean-install CI jobs. Local execution is verified; platform results are tracked in Actions. |
+| Browser discovery and supported Node versions depended on the original environment. | Discover installed browsers on Windows/macOS/Linux, support an explicit path and installed Chromium, declare supported Node 20/22 lines, reuse that browser for collection/PDF, skip the duplicate Puppeteer download, use shell-independent test discovery for Windows Node 20, and add clean-install CI jobs. Local execution is verified; platform results are tracked in Actions. |
 
 ## Dependency audit
 
