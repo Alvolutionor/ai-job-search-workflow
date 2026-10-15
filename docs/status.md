@@ -1,48 +1,52 @@
 # Implementation and verification status
 
-Source review date: **2026-10-15**. This repository documents a local setup; it does not package that setup or claim a successful hiring outcome.
+Integration date: **2026-10-15**. JobTrending source is included at the repository root, alongside the workflow guides.
 
-## What was inspected
+## Included application
 
-| Local component | Inspected evidence | What this supports |
-| --- | --- | --- |
-| Collector and storage | `src/cli/crawl.mjs`, `src/cli/enrich.mjs`, `src/lib/db.mjs`, search configs, application README/package scripts | Configurable search, local job/provenance storage, task progress, and description enrichment. |
-| Relevance review | `config/robotics-review-policy.mjs`, `scripts/validate-verdicts.mjs`, research workflow documentation | Minimum description threshold and exact-ID verdict validation. |
-| Company matching | `src/lib/startup-matches.mjs` | The documented filters, ordering, scores, and evidence gaps. |
-| Recruiting state and actions | `src/lib/recruiting-store.mjs`, `src/server/recruiting-router.mjs` | Queue, snapshots, context versions, draft states, per-action confirmation, and platform-attachment routes. |
-| AI drafts | `src/lib/recruiting-agent.mjs` | Profile-grounded prompting, configured CLI invocation, tools disabled, and draft-only model output. |
-| Regression coverage inventory | Test declarations in `tests/recruiting.test.mjs` | Tests exist for invalidation, duplicate submission, contact attribution, HTTP approval, browser adapters, and UI flow. They were not rerun for this summary. |
-| Candidate/material workflow | Candidate-confirmed profile and evidence index; resume-directory inventory and its research summary | Reusable profile information and multiple application-material variants. Personal content is excluded from this repository. |
+| Component | Location |
+| --- | --- |
+| Collection/login/enrichment commands | `src/cli/` |
+| Database, browser adapters, matching, drafting | `src/lib/` |
+| Local server and recruiting routes | `src/server/` |
+| Workbench, company view, job library, domain research UI | `src/server/templates/`, `src/server/public/` |
+| Generic private-configuration examples | `config/*.example.json` |
+| Optional robotics research configurations and rules | Other files under `config/` |
+| Review/report scripts and first-run setup | `scripts/` |
+| Regression and integration fixtures | `tests/` |
+| City lookup data | `vendor/cityGroup.mjs` |
 
-All application paths in this table are relative to the separately existing local `jobtrending` root. They are source references, not files included in this repository. Private machine paths and source excerpts are intentionally omitted.
+## Changes for public use
 
-## Current boundaries
+- Imported source without the original runtime data, candidate profile, active search configuration, dependency directory, reference checkouts, or Git history.
+- Replaced the personalized matcher with user-defined cities, keywords, exclusions, preferred contact titles, and priority terms. No domain, city, or contact preference is enabled by default.
+- Made workbench cities dynamic and allowed any supported city or nationwide live search.
+- Replaced the personal drafting goal and profile with user-supplied files and a Settings goal.
+- Replaced the private resume directory with `data/resumes/` or `JOBTRENDING_RESUME_DIR`.
+- Added first-run configuration initialization that preserves existing files.
+- Preserved the optional robotics research module as a separate domain example.
+- Retained upstream references and license texts in [third-party notices](../THIRD_PARTY_NOTICES.md).
 
-- The source includes personalized matching and live-search restrictions, fixed score weights, domain-specific review scripts, and a specialized drafting prompt. These are limits of that local implementation, not career guidance or defaults for the reusable workflow. Source changes are required where those choices are hard-coded. This repository's generic prompt and templates let the user supply their own goals.
+## Verification
 
-- The local application is evolving. The newest router includes sending an attachment already stored on BOSS; older README text still describes attachment sending as unimplemented. Treat the new path as implemented in source but pending real-account verification.
-- A selected local PDF is only a queue preference. It is not automatically uploaded by that action.
-- The earlier standalone agent page accepts manually supplied conversation text. The current workbench has separate live browser paths. These are different operating modes.
-- Live search in the workbench retrieves one current search page, not a complete crawl.
-- Conversation reads cover loaded data/history, not the entire account archive.
-- The monitor can generate drafts; it does not send autonomously.
-- WeChat handoff is a local record. QR recognition and WeChat application control are not implemented.
-- Existing candidate/resume configuration includes machine-specific assumptions, including a fixed resume directory. The local app has not been established as portable by this documentation release.
-- Interviews, offers, acceptance, and measured hiring success are not established by the inspected implementation.
+Tested on Windows with Node.js 22.12.0:
 
-## Verification scope for this publication
+- `npm ci` installs the locked dependencies and initializes the blank local configuration.
+- `npm test`: eleven tests pass.
+- Generic matching retains unrelated careers, cities, and contact types; only configured filters change inclusion.
+- Mock live search accepts a city outside the old scope and nationwide search; Settings saves the user goal.
+- Empty-data workbench, job library, company view, optional research page, and their APIs return successfully without a BOSS login.
+- Existing fixture tests cover context changes, duplicate submission, attachment selection, browser actions, and UI review/handoff.
+- Internal links and staged files are checked before publication; local runtime/configuration files are excluded.
 
-The publication checks repository contents, internal Markdown file links, documented command/script names, and potentially sensitive strings. It verifies the GitHub repository is public and that the pushed revision matches the local revision.
+## Remaining verification limits
 
-This review did **not** rerun the application's tests, collect fresh listings, log into BOSS, verify real selectors, send any recruiter message or attachment, operate WeChat, or audit every local project. Source inspection is evidence of implementation shape, not proof of end-to-end live success.
+- This integration does not log into a real BOSS account, collect fresh listings, send recruiter messages or attachments, or operate WeChat.
+- Browser adapter fixtures do not prove the current logged-in BOSS website still matches every selector.
+- The drafting prompt is tested; a real model call from a freshly configured user account is not part of the tests.
+- The normal-browser login launcher currently discovers Windows Chrome/Edge paths. Other operating systems are not verified.
+- Robotics report generation and historical cleanup/PDF scripts require their own collected/reviewed inputs; every historical script has not been executed.
+- Live workbench search reads one page, and inbox snapshots cover loaded conversations/history. The collector handles broader configured collection separately.
+- QR recognition, WeChat app control, interview scheduling, and offer management are not implemented.
 
-## Related upstream projects
-
-The existing local application's README identifies these upstream sources. This summary links to them for attribution and does not redistribute their code or claim their features as original work:
-
-- [geekgeekrun](https://github.com/geekgeekrun/geekgeekrun): referenced for city data and browser/search integration patterns.
-- [auto-zhipin](https://github.com/ufownl/auto-zhipin): referenced for login flow and salary numeral handling.
-- [BossHunter](https://github.com/powerycy/BossHunter): referenced by the local workbench for browser-adapter behavior.
-- [boss-helper](https://github.com/Ocyss/boss-helper): a separate third-party browser extension present locally; its presence does not establish it is running in the current workflow.
-
-These attributions come from local files. Remote maintenance status, current feature support, and licenses were not audited for this summary. The separate historical LinkedIn auto-applier directory was only identified; its implementation and current use were not reviewed.
+The original local project remains separate and unchanged. Public-repository changes do not migrate its private database or replace its running service.

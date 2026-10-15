@@ -18,7 +18,7 @@ Show the original listing, the matching criterion, the supporting text, and any 
 
 Keep search relevance separate from candidate similarity: a listing can match the search perfectly while asking for experience the candidate has not listed. The user decides what to do with that information.
 
-The original local application's company matcher contains a personalized domain/city scope and fixed scoring weights. Those settings are implementation history, not a recommended scoring model for other users. Adapting that matcher requires changing its source; documenting a general workflow does not make its hard-coded rules configurable.
+The included matcher reads `config/matching.config.json`. Empty lists retain all jobs. Keywords and exclusions control inclusion; priority terms contribute one point per matching term. Preferred contact titles affect ordering only when `prioritizeContacts` is enabled, and restrict results only when the user selects that contact filter. No industry, city, or contact title is built in as a preferred choice.
 
 ## Preserve useful source information
 

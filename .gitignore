@@ -19,8 +19,14 @@
 *.jsonl
 *cookies*.json
 *local-storage*.json
-*candidate-profile*.json
 *.pem
 *.key
 Thumbs.db
 .DS_Store
+/.learnings/
+/config/candidate-profile.json
+/config/search.config.json
+/config/matching.config.json
+/config/recruiting-policy.json
+
+/docs/robotics-market-report.md

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#e8eff0">
+    <title>机器人岗位技能图谱 · JobTrending</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/robotics.css">
+    <script src="/robotics.js" defer></script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="site-header">
+        <a class="brand" href="/robotics" aria-label="机器人技能图谱首页">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span>JobTrending <strong>技能图谱</strong></span>
+        </a>
+        <nav aria-label="主导航">
+          <a class="nav-current" href="/robotics" aria-current="page">技能看板</a>
+          <a href="/jobs">职位列表</a>
+        </nav>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <h1 id="page-title">先看岗位需求，<br>再安排练习。</h1>
+          <p>从 BOSS 职位详情中提取的 50 项机器人技能。按被提及的岗位数排序，点开即可查看练习目标和原文依据。</p>
+        </div>
+        <div class="intro-aside">
+          <div class="sample-main"><strong id="sample-count">—</strong><span>份纳入统计的机器人相关岗位</span></div>
+          <div class="sample-meta"><span id="sample-date">数据加载中</span><span>每个岗位对每项技能只计一次</span></div>
+          <div class="sample-rule">提及次数表示本次样本中的出现次数，不代表全国招聘占比。</div>
+        </div>
+      </section>
+
+      <main>
+        <section class="workspace" aria-label="技能浏览">
+          <div class="explorer">
+            <div class="section-heading">
+              <div>
+                <h2>技能需求</h2>
+                <p>先浏览高频项，再按方向缩小范围。</p>
+              </div>
+              <span class="result-count" id="result-count"></span>
+            </div>
+
+            <div class="controls">
+              <label class="search-field">
+                <span class="search-icon" aria-hidden="true"></span>
+                <span class="sr-only">搜索技能</span>
+                <input id="skill-search" type="search" placeholder="搜索 ROS 2、传感器、仿真…" autocomplete="off">
+              </label>
+              <div class="category-strip" id="category-strip" role="group" aria-label="按技能方向筛选"></div>
+              <label class="progress-filter"><input type="checkbox" id="pending-only"><span>只看待练习</span></label>
+            </div>
+
+            <div class="axis-heading"><span>按岗位提及次数排序</span><span>岗位数 / <span id="axis-total">—</span></span></div>
+            <div class="skill-list" id="skill-list" aria-live="polite"></div>
+            <button class="show-more" id="show-more" type="button" hidden>再看 8 项技能</button>
+          </div>
+
+          <aside class="detail" id="skill-detail" aria-live="polite">
+            <div class="detail-loading">正在读取技能证据…</div>
+          </aside>
+        </section>
+
+        <section class="method" aria-label="样本与统计说明">
+          <div>
+            <h2>统计口径</h2>
+            <p>范围为上海、深圳的机器人关键词岗位。只统计详情至少 120 字、且经逐条审核确认工作内容与机器人相关的岗位；尚未审核的计入“待审核”，不参与技能计数。技能必须出现在详情原文中。数据随补抓与审核实时更新。练习项由岗位要求转化，不是招聘方原话。</p>
+          </div>
+          <div class="method-figures" id="method-figures"></div>
+          <p class="date-limit">BOSS 未提供可核验的首次发布日期。本页仅确认职位在采集日可见，无法证明它们在最近半年首次发布。</p>
+        </section>
+      </main>
+
+      <footer>JobTrending · BOSS 直聘机器人岗位技能调研</footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JobTrending</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="page-shell">
+      <a href="/startups">机器人与 AI 公司筛选</a>
+      <a href="/robotics">查看机器人技能看板</a>
+      <header class="hero-card">
+        <div class="hero-copy">
+          <p class="eyebrow">Nationwide BOSS Search</p>
+          <h1>JobTrending</h1>
+          <p class="hero-text">一次性跑全国多城市、多关键词抓取，把结果沉淀到本地库里，再按最近 N 天、关键词、城市、公司做筛选。</p>
+        </div>
+        <div class="hero-stats">
+          <article class="stat-tile">
+            <span>职位总量</span>
+            <strong>{{ stats.totalJobs }}</strong>
+          </article>
+          <article class="stat-tile">
+            <span>命中组合</span>
+            <strong>{{ stats.totalHits }}</strong>
+          </article>
+          <article class="stat-tile">
+            <span>关键词数</span>
+            <strong>{{ stats.keywordCount }}</strong>
+          </article>
+          <article class="stat-tile">
+            <span>发布时间覆盖</span>
+            <strong>{{ publishCoveragePct }}%</strong>
+          </article>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>筛选</h2>
+            <a class="ghost-link" href="{{ exportUrl }}">导出 CSV</a>
+          </div>
+          <form class="filters-grid" method="get">
+            <label>
+              <span>全文</span>
+              <input type="text" name="text" value="{{ filters.text }}" placeholder="职位 / 公司 / 描述 / 技能">
+            </label>
+            <label>
+              <span>关键词</span>
+              <select name="keyword">
+                <option value="">全部</option>
+                {% for keyword in keywordOptions %}
+                <option value="{{ keyword }}" {% if filters.keyword == keyword %}selected{% endif %}>{{ keyword }}</option>
+                {% endfor %}
+              </select>
+            </label>
+            <label>
+              <span>城市</span>
+              <input type="text" name="city" value="{{ filters.city }}" placeholder="职位城市或搜索城市">
+            </label>
+            <label>
+              <span>公司</span>
+              <input type="text" name="company" value="{{ filters.company }}" placeholder="公司名模糊匹配">
+            </label>
+            <label>
+              <span>经验</span>
+              <select name="experience">
+                <option value="">全部</option>
+                {% for experience in experienceOptions %}
+                <option value="{{ experience }}" {% if filters.experience == experience %}selected{% endif %}>{{ experience }}</option>
+                {% endfor %}
+              </select>
+            </label>
+            <label>
+              <span>最近 N 天发布</span>
+              <select name="days">
+                <option value="0" {% if filters.days == 0 %}selected{% endif %}>不限</option>
+                <option value="1" {% if filters.days == 1 %}selected{% endif %}>1 天</option>
+                <option value="3" {% if filters.days == 3 %}selected{% endif %}>3 天</option>
+                <option value="7" {% if filters.days == 7 %}selected{% endif %}>7 天</option>
+                <option value="15" {% if filters.days == 15 %}selected{% endif %}>15 天</option>
+                <option value="30" {% if filters.days == 30 %}selected{% endif %}>30 天</option>
+              </select>
+            </label>
+            <label class="inline-check">
+              <span>包含无发布时间</span>
+              <input type="checkbox" name="includeUnknownPublish" value="1" {% if filters.includeUnknownPublish %}checked{% endif %}>
+            </label>
+            <label>
+              <span>每页</span>
+              <select name="limit">
+                <option value="25" {% if filters.limit == 25 %}selected{% endif %}>25</option>
+                <option value="50" {% if filters.limit == 50 %}selected{% endif %}>50</option>
+                <option value="100" {% if filters.limit == 100 %}selected{% endif %}>100</option>
+              </select>
+            </label>
+            <div class="filter-actions">
+              <button type="submit">应用筛选</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>抓取状态</h2>
+            <span class="subtle">最近采集：{{ formatTimestamp(stats.latestSeenAtMs) if stats.latestSeenAtMs else '暂无' }}</span>
+          </div>
+          <div class="status-grid">
+            <article class="status-chip">
+              <span>待跑</span>
+              <strong>{{ taskSummary.pending }}</strong>
+            </article>
+            <article class="status-chip">
+              <span>进行中</span>
+              <strong>{{ taskSummary.running }}</strong>
+            </article>
+            <article class="status-chip">
+              <span>完成</span>
+              <strong>{{ taskSummary.done }}</strong>
+            </article>
+            <article class="status-chip">
+              <span>失败</span>
+              <strong>{{ taskSummary.failed }}</strong>
+            </article>
+          </div>
+          {% if recentFailures.length > 0 %}
+          <div class="failure-list">
+            {% for item in recentFailures %}
+            <article>
+              <h3>{{ item.search_city_name }} / {{ item.keyword }}</h3>
+              <p>{{ item.last_error }}</p>
+            </article>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="empty-copy">暂无失败任务。</p>
+          {% endif %}
+        </section>
+
+        <section class="panel panel-results">
+          <div class="panel-head">
+            <h2>结果</h2>
+            <span class="subtle">{{ total }} 条匹配，当前第 {{ pagination.page }} / {{ pagination.totalPages }} 页</span>
+          </div>
+          {% if jobs.length == 0 %}
+          <div class="empty-state">
+            <p>当前筛选条件下没有结果。</p>
+          </div>
+          {% else %}
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>职位</th>
+                  <th>公司 / 城市</th>
+                  <th>薪资 / 经验</th>
+                  <th>发布时间</th>
+                  <th>命中来源</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for job in jobs %}
+                <tr>
+                  <td>
+                    <div class="job-title">{{ job.job_name }}</div>
+                    {% if job.descriptionPreview %}
+                    <p class="meta-line">{{ job.descriptionPreview }}</p>
+                    {% endif %}
+                    {% if job.skillsPreview %}
+                    <p class="tag-line">{{ job.skillsPreview }}</p>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="company-line">{{ job.company_name or '未知公司' }}</div>
+                    <p class="meta-line">{{ job.city_name or '未知城市' }}{% if job.district_name %} · {{ job.district_name }}{% endif %}</p>
+                  </td>
+                  <td>
+                    <div class="company-line">{{ job.salary_desc or '未知' }}</div>
+                    <p class="meta-line">{{ job.experience_name or '经验未知' }}{% if job.degree_name %} · {{ job.degree_name }}{% endif %}</p>
+                  </td>
+                  <td>
+                    <div class="company-line">{{ job.publishedDisplay }}</div>
+                    {% if job.activeDisplay %}<p class="meta-line">最近活跃 {{ job.activeDisplay }}</p>{% endif %}
+                    <p class="meta-line">最近采集 {{ job.collectedDisplay }}</p>
+                  </td>
+                  <td>
+                    <div class="company-line">{{ job.matchedKeywordsDisplay }}</div>
+                    <p class="meta-line">{{ job.matchedCitiesDisplay }}</p>
+                  </td>
+                  <td>
+                    <a class="job-link" href="{{ job.job_url }}" target="_blank" rel="noreferrer">打开职位</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="pager">
+            {% if pagination.prevUrl %}
+            <a class="pager-link" href="{{ pagination.prevUrl }}">上一页</a>
+            {% endif %}
+            <span>第 {{ pagination.page }} / {{ pagination.totalPages }} 页</span>
+            {% if pagination.nextUrl %}
+            <a class="pager-link" href="{{ pagination.nextUrl }}">下一页</a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

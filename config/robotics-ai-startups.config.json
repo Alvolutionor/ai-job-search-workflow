@@ -1,0 +1,11 @@
+{
+  "keywords": ["机器人 AI 应用", "机器人 全栈", "具身智能 软件", "机器人 Agent", "AI 智能硬件", "语音交互 机器人"],
+  "cityMode": "custom",
+  "cityNames": ["上海", "深圳"],
+  "pageSize": 30,
+  "minDelayMs": 5000,
+  "maxDelayMs": 9000,
+  "requestTimeoutMs": 20000,
+  "retryCount": 0,
+  "headless": true
+}

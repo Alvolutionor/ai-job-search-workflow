@@ -2,7 +2,7 @@
 
 ## Public contents
 
-This repository publishes a generalized description of the workflow, an operator runbook, evidence rules, generic templates, and a drafting prompt. It publishes no original resume, actual shortlist, job-description corpus, conversation transcript, model account configuration, or application source.
+This repository includes the JobTrending application source, dependency lockfile, generic configuration examples, tests, workflow guides, and templates. It includes no original resume, actual shortlist, job-description corpus, conversation transcript, browser session, or model account configuration.
 
 Do not fill these templates with personal information inside a public checkout. Copy them into a separate private workspace first.
 
@@ -27,6 +27,6 @@ Review what is supplied to the model. Keep credential material and unrelated pri
 
 ## Publication discipline
 
-The first public revision is built from newly written files rather than the existing application's Git history. This avoids importing its data directories, historical credentials, unrelated employer code, or earlier private drafts.
+Application files were imported using an explicit source/config/test allowlist. The original application's Git history, data directories, personal profile, active search configuration, installed dependencies, and reference checkouts were excluded. Local configuration is initialized from committed generic examples and ignored by Git.
 
 The ignore rules cover common private-data paths and formats. They are a backstop, not a guarantee: inspect staged files and the actual Git tree before every future publication. A generic-looking Markdown file can still contain private data.

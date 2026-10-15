@@ -1,64 +1,92 @@
 # AI Job Search Workflow
 
-A reusable, local-first job-search workflow: collect listings, organize opportunities, prepare application materials, and assist with recruiting conversations.
+A local job-search toolkit built around **JobTrending**: collect BOSS Zhipin listings, search a local job library, compare companies, manage an application queue, and draft recruiting messages with your own profile and goals.
 
-This repository summarizes an existing Windows setup centered on BOSS Zhipin, a local `jobtrending` project, evidence-backed resumes, and AI-assisted message drafts. It contains the playbook, reusable templates, and an operator runbook. The collector and recruiting application are **not distributed here**; cloning this repository does not install them.
+The runnable application, tests, configuration examples, and workflow guides are included in this repository.
 
-Reviewed on **2026-10-15**. The local recruiting application was being developed during the review, so implementation and live verification are reported separately.
+## Quick start
 
-## The workflow
+Requirements: Node.js 20.19 or newer, npm, and Chrome or Edge for the current Windows login launcher. AI drafting additionally uses an authenticated local Claude CLI.
 
-| Step | What happens | Output and decision |
-| --- | --- | --- |
-| 1. Establish candidate facts | Supply the experience, skills, resumes, and materials the user wants to work with. | A private source of truth, with uncertain claims kept separate. |
-| 2. Define the search | Let the user choose roles, industries, keywords, locations, and optional filters. | An explicit search scope rather than an open-ended feed. |
-| 3. Collect opportunities | Search BOSS through the candidate's logged-in browser and keep observations locally. | Deduplicated jobs, search provenance, and resumable collection tasks. |
-| 4. Read and review descriptions | Retrieve missing job descriptions and judge actual relevance by job ID. | A reviewed corpus; incomplete listings remain candidates. |
-| 5. Understand demand | Count explicit skill evidence and attach a practice check to each skill. | A learning backlog grounded in the reviewed sample. |
-| 6. Shortlist companies | Group roles by company and compare them using the user's selection criteria. | An application queue chosen by the user. |
-| 7. Tailor materials | Create or select resume variants for whichever roles the user targets. | A selected PDF and matching BOSS profile text. |
-| 8. Start contact | Review a specific role before initiating BOSS communication. | A contact attempt; this does not prove an attachment was sent. |
-| 9. Draft and review replies | Read the current conversation, generate a grounded draft, edit it, and approve the exact action. | A reply with an observed result, or an explicitly unconfirmed attempt. |
-| 10. Continue the conversation | Offer a contact handoff when useful and record its actual completion. | A verified handoff or a closed conversation. Later interview and offer stages remain manual. |
+```powershell
+git clone https://github.com/Alvolutionor/ai-job-search-workflow.git
+cd ai-job-search-workflow
+npm ci
+npx playwright install chromium
+npm run web
+```
 
-## Why these steps belong together
+Visit `http://localhost:3333/workbench`. The empty-data workbench and job library can open before logging into BOSS or configuring a model.
 
-A job database makes opportunities searchable. Full descriptions support comparisons. A reusable profile helps prepare relevant materials and replies. The queue connects research to applications and conversations.
+Installation creates local configuration files from the examples without replacing existing files. Set up your search and profile before collecting listings or generating personal replies.
 
-## User-controlled goals
+## Configure your search
 
-The user chooses the career direction, target roles, industries, cities, company sizes, contact preferences, and selection criteria. The workflow supports exploring a new field, applying for familiar roles, broad market research, or a narrowly targeted search.
+| Local file | Purpose |
+| --- | --- |
+| `config/search.config.json` | Keywords, cities or nationwide search, collection settings. Replace `YOUR_JOB_KEYWORD`. |
+| `config/matching.config.json` | Optional city/keyword exclusions, preferred contact titles, and priority terms. Empty lists retain all jobs; contacts are not prioritized by default. |
+| `config/candidate-profile.json` | Your experience, skills, projects, targets, and preferences for drafting. |
+| `config/recruiting-policy.json` | Your communication goal, output language, tone, and contact preference. |
+| `data/resumes/` | Local PDF choices. Override with `JOBTRENDING_RESUME_DIR`. |
 
-Search filters, ranking criteria, resume emphasis, and drafting goals follow those choices. The workflow does not prescribe an industry, infer what someone should pursue from their background, or make a matching score an eligibility requirement.
+These local files and runtime data are ignored by Git. The committed `*.example.json` files contain no personal profile or recruiting history.
 
-Some pages in the original local application contain settings written for one search. Their implementation limits are documented in the [local runbook](docs/local-runbook.md) and [status notes](docs/status.md); they are not defaults for this reusable workflow.
+The user chooses roles, industries, cities, company sizes, contacts, and what to pursue. Matching uses the configured terms; the default company view does not filter for a particular career or city. Communication goals can also be set in the workbench Settings.
 
-## Read the playbook
+## Collect listings
 
-- [End-to-end workflow](docs/workflow.md): inputs, actions, and completion criteria.
-- [Local operator runbook](docs/local-runbook.md): commands for the existing local application and dashboard routes.
-- [Evidence and matching rules](docs/evidence-and-matching.md): what the collector, skill counts, and ranking actually mean.
-- [Implementation and verification status](docs/status.md): source coverage, known gaps, and references.
-- [Data handling](docs/data-handling.md): what stays local, what reaches a model service, and what is published.
+```powershell
+npm run login
+```
 
-## Reuse the templates
+Complete BOSS login and any security verification in the opened browser, then keep it open. After editing the search configuration:
 
-- [Candidate evidence](templates/candidate-evidence.md)
-- [Search brief and role review](templates/search-and-role-review.md)
-- [Application and conversation review](templates/application-and-conversation.md)
-- [AI drafting prompt](prompts/recruiting-draft.md)
+```powershell
+node ./src/cli/collect-cookies.mjs --cookies-only
+node ./src/cli/crawl.mjs --config ./config/search.config.json --dry-run
+node ./src/cli/crawl.mjs --config ./config/search.config.json
+```
 
-Copy templates into your own private workspace before adding personal information. Every example in this repository is generic; no resume, recruiter conversation, account session, or real shortlist is included.
+For a smaller collection, add `--city-limit 1 --keyword-limit 1`. Use `--skip-jd` for list-only collection and `node ./src/cli/enrich.mjs --config ./config/search.config.json --limit 10` to retrieve missing descriptions separately.
 
-## What is available today
+## Included tools
 
-Source inspection found the local collector, relevance-review exports, skill dashboard, company matching, recruiting queue, conversation snapshots, AI drafting, and per-action confirmation. The latest source also contains a path for sending an attachment already stored on BOSS. This attachment path was under active development and has not been established as working on a real account by this review.
+- **Job library** (`/jobs`): keyword, city, company, experience, and date filtering; CSV export; search provenance and collection progress.
+- **Company view** (`/startups`): company-grouped results ordered using your matching configuration.
+- **Recruiting workbench** (`/workbench`): queue, live search, loaded conversation snapshots, editable drafts, per-action sending confirmation, existing BOSS attachment selection, and contact-handoff records.
+- **Standalone draft page** (`/agent?job=JOB_ID`): draft from a selected listing and manually supplied conversation.
+- **Optional robotics research** (`/robotics`): the original domain-specific skill rules, source excerpts, review exports, and practice checks. Its sample scope is separate from the general search and matching settings.
 
-The local test suite uses fixtures: controlled pages and sample conversations instead of real recruiters. Passing those checks would not establish that current BOSS pages work with a logged-in account. This documentation release did not run live collection, send messages, send resumes, or operate WeChat.
+Starting contact, sending a message, and sending an attachment are separate actions. Selecting a local PDF records a queue preference; the existing platform-attachment action sends an attachment already stored on BOSS.
 
-## Start here
+## AI drafting
 
-1. Fill in the private candidate-evidence template.
-2. Write one search brief and review one role using its full description.
-3. If you already have the local `jobtrending` application, follow the runbook. Otherwise, use the same templates with manual searches; no private application code is required to use the method.
-4. Record the real outcome after each contact attempt. Do not treat a queued role, generated draft, or clicked button as a successful application.
+Fill in your local candidate profile and recruiting policy, or enter a communication goal in Settings. The runner uses the local Claude account; set `BOSS_AGENT_CLAUDE_PATH` if its executable needs an explicit path and `BOSS_AGENT_CLAUDE_CONFIG_DIR` to use another account profile.
+
+Drafting sends the necessary profile/job/conversation context to the configured model service. It disables tools and external integrations for that call. The workbench presents the resulting draft for editing and confirmation.
+
+## Tests
+
+```powershell
+npm test
+```
+
+Eleven local tests cover configurable matching across unrelated careers and cities, user-directed prompts, mocked live search, empty-data pages/APIs, draft invalidation, duplicate submission, platform attachments, browser adapters, and the workbench UI. Browser fixtures use intercepted pages and do not contact real recruiters.
+
+Verified on Windows with Node.js 22.12.0. Fresh installation and empty-data startup are tested. Real logged-in BOSS selectors, message/attachment delivery, and an end-to-end model call from a new account remain unverified for this public version.
+
+## Guides and templates
+
+- [End-to-end workflow](docs/workflow.md)
+- [Operator runbook](docs/local-runbook.md)
+- [Evidence and matching](docs/evidence-and-matching.md)
+- [Implementation and verification status](docs/status.md)
+- [Data handling](docs/data-handling.md)
+- [Candidate profile worksheet](templates/candidate-evidence.md)
+- [Search and role review](templates/search-and-role-review.md)
+- [Application and conversation record](templates/application-and-conversation.md)
+- [Reusable drafting prompt](prompts/recruiting-draft.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
+
+Copy worksheets into a private workspace before filling them in. Browser sessions, job databases, resumes, conversations, and model credentials are not included in the public repository.

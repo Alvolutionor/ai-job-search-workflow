@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BOSS 求职工作台</title><link rel="stylesheet" href="/workbench.css"><script src="/workbench.js" defer></script></head>
+<body>
+  <aside class="rail">
+    <a class="brand" href="/workbench"><span class="brand-mark">B</span>求职工作台</a>
+    <p class="rail-caption">Search on your terms</p>
+    <nav aria-label="求职流程">
+      <button data-view="jobs" class="active">寻找岗位 <span id="jobs-count"></span></button>
+      <button data-view="queue">投递队列 <span id="queue-count">0</span></button>
+      <button data-view="inbox">实时会话 <span id="inbox-count">0</span></button>
+      <button data-view="review">待确认发送 <span id="review-count">0</span></button>
+      <button data-view="wechat">微信交接 <span id="wechat-count">0</span></button>
+      <button data-view="settings">设置</button>
+    </nav>
+    <div class="rail-footer"><p>每次发送都由你确认。</p><a href="/startups">公司筛选依据</a><a href="/jobs">历史职位库</a></div>
+  </aside>
+  <div class="desk">
+    <header class="topbar"><div><h1 id="view-title">寻找岗位</h1><p id="connection-detail">正在检查连接…</p></div><div class="connection-actions"><span id="connection-state" class="connection-pill">未连接</span><button id="login-button">打开 BOSS 登录</button><button id="connect-button" class="primary">连接</button><button id="sync-button">立即同步</button><button id="monitor-button">开始实时监测</button></div></header>
+    <div id="notice" role="status" aria-live="polite" hidden></div>
+    <div class="workspace">
+      <section class="list-pane" aria-label="任务列表">
+        <div id="search-tools"><form id="search-form"><input id="query" placeholder="搜索职位、公司或技能" aria-label="搜索岗位"><div class="search-options"><select id="city" aria-label="城市"><option value="">All cities</option></select><button>搜索职位库</button></div></form><details class="live-search"><summary>实时搜索 BOSS</summary><form id="live-search-form"><input id="live-keyword" placeholder="Search keyword" aria-label="实时搜索关键词"><select id="live-city" aria-label="实时搜索城市"><option value="">Select a city</option></select><button class="primary">获取最新岗位</button></form></details><p class="source-note" id="source-note">当前为历史采集数据。连接 BOSS 后可实时搜索。</p></div>
+        <div class="list-heading"><strong id="list-label">候选岗位</strong><span id="list-total"></span></div>
+        <div id="work-list"></div><div id="pagination"><button id="previous-page">上一页</button><span id="page-label"></span><button id="next-page">下一页</button></div>
+      </section>
+      <section class="detail-pane" id="detail-pane" aria-label="岗位或会话"><div class="empty-state"><span class="empty-symbol">↔</span><h2>从合适的岗位，聊到真正的机会。</h2><p>选择岗位加入投递队列，确认后再发起沟通。连接 BOSS 后，可以读取实时会话并拟写回复。</p></div></section>
+      <aside class="review-pane" aria-label="回复审阅"><div class="review-heading"><h2>回复与发送确认</h2><span class="approval-tag">由你确认</span></div><div id="review-pane"><p class="muted">选择会话生成回复，或从投递队列准备发起沟通。</p></div><div class="model-note">Claude 使用你本机的账号。生成草稿不会发送消息；只有 BOSS 显示发送结果后，才会标记为已发送。</div></aside>
+    </div>
+  </div>
+  <dialog id="confirm-dialog"><form method="dialog"><h2 id="confirm-title">确认本次操作</h2><p id="confirm-recipient"></p><pre id="confirm-text"></pre><p class="muted">收到新消息后，旧草稿需要重新审阅。发送结果待核实时，请先到 BOSS 检查，再决定是否重试。</p><div class="dialog-actions"><button value="cancel">返回修改</button><button id="confirm-send" value="send" class="primary">确认发送</button></div></form></dialog>
+</body>
+</html>

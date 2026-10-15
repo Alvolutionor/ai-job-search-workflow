@@ -1,0 +1,16 @@
+{
+  "keywords": [
+    "YOUR_JOB_KEYWORD"
+  ],
+  "cityMode": "nationwide",
+  "cityCodes": [],
+  "cityNames": [],
+  "excludedCityCodes": [],
+  "excludedCityNames": [],
+  "pageSize": 30,
+  "minDelayMs": 1800,
+  "maxDelayMs": 3200,
+  "requestTimeoutMs": 45000,
+  "retryCount": 2,
+  "headless": false
+}

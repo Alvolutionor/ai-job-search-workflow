@@ -1,0 +1,9 @@
+{
+  "goal": "",
+  "language": "Chinese",
+  "tone": "concise",
+  "contactPreference": "",
+  "autonomousSending": false,
+  "invalidateApprovalOnConversationChange": true,
+  "deliveryVerificationRequired": true
+}

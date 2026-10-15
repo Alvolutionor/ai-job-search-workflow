@@ -1,19 +1,19 @@
 # Local operator runbook
 
-These commands belong to the existing **local `jobtrending` application**, not this documentation repository. Run them from that application's root. Its private source, dependencies, browser profile, and candidate configuration are not bundled here.
+Run these commands from this repository root. JobTrending source and locked dependencies are included. Your profile, search configuration, browser session, and runtime data are created locally.
 
 ## 1. Prepare the existing application
 
 If dependencies have not been installed:
 
 ```powershell
-npm install
+npm ci
 npx playwright install chromium
 ```
 
 Set `keywords`, `cityMode`, and the relevant city fields in `config/search.config.json` to match the user's search. The collector supports all-city, custom-city, and nationwide modes. The commands below use that general configuration.
 
-Some specialized pages and review scripts were written for one person's search. Their domain/city restrictions are current implementation limits, not preferences other users are expected to adopt. Changing the collector configuration does not update hard-coded matching pages.
+Set optional matching criteria in `config/matching.config.json`, your profile in `config/candidate-profile.json`, and drafting preferences in `config/recruiting-policy.json`. Installation creates these from generic examples without overwriting existing files. The optional robotics research module uses its own sample configurations.
 
 ## 2. Log in and inspect a small search
 
@@ -95,12 +95,12 @@ npm run web
 | `http://localhost:3333/agent?job=JOB_ID` | Earlier draft-only page for manually supplied conversation text. Replace `JOB_ID` with an actual local ID. |
 | `http://localhost:3333/workbench` | Current queue, conversation sync, drafts, confirmation, and handoff records. |
 
-The root route opens the robotics dashboard. The service binds to the local machine.
+The root route opens the workbench. The service binds to the local machine.
 
 ## 6. Operate the recruiting workbench
 
 1. Use **Open BOSS login**, complete verification, keep that browser open, then **Connect**.
-2. Search the historical pool or use the existing live-search endpoint. That endpoint currently has a hard-coded two-city scope and retrieves the first page only; change its source to support a different scope. The general collector uses the search configuration described above.
+2. Search the local pool or use live search with a keyword and any supported city or nationwide scope. Live search retrieves the first page. The collector uses the search configuration for broader collection.
 3. Add a reviewed role to the queue. Selecting a local resume records intent only.
 4. Review and confirm the contact action for that specific role.
 5. Sync the inbox and read a selected conversation. Only loaded conversation data/history is available.
@@ -111,7 +111,7 @@ The root route opens the robotics dashboard. The service binds to the local mach
 
 Automatic drafting is enabled by default. Starting the monitor checks every 15 seconds and can draft for the selected conversation or unread conversations linked to queued jobs. It does not authorize automatic sending. Errors/security pages stop the monitor.
 
-The earlier `/agent` page is draft-only; the newer workbench has separate live read/send paths. Older README sections describing all sending as unimplemented do not describe the latest workbench source.
+The standalone `/agent` page is draft-only; the workbench has separate live read/send paths. Set your communication goal in Settings. Place local resume PDFs in `data/resumes/`, or set `JOBTRENDING_RESUME_DIR` to your own directory.
 
 ## 7. Local model configuration and checks
 
@@ -123,4 +123,4 @@ The runner disables tools, external integrations, slash commands, and session pe
 npm run test:recruiting
 ```
 
-These are isolated fixtures for store behavior, confirmation, browser adapters, and UI interactions. They do not send messages to real recruiters and do not substitute for a verified logged-in integration. No existing application's tests or live actions were run as part of publishing this summary.
+These are isolated fixtures for store behavior, confirmation, browser adapters, and UI interactions. They do not send messages to real recruiters and do not substitute for a verified logged-in integration. The integrated test suite passes locally; real recruiter actions are outside its fixture coverage.

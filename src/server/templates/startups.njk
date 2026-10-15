@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Company search</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/startups.css"></head>
+<body><main class="page-shell">
+<nav><a href="/workbench">Workbench</a> · <a href="/jobs">Job library</a> · <a href="/robotics">Optional robotics research</a></nav>
+<header class="panel startup-header"><h1>Company search</h1><p>Filter collected listings using your own criteria.</p><p>{{ result.totalCompanies }} companies · {{ result.totalJobs }} jobs. {{ result.source }}</p>
+<form class="filters-grid" method="get">
+<label>City<select name="city"><option value="">All cities</option>{% for city in cities %}<option value="{{ city.name }}" {% if filters.city == city.name %}selected{% endif %}>{{ city.name }}</option>{% endfor %}</select></label>
+<label>Company size<select name="scale"><option value="all" {% if filters.scale == 'all' %}selected{% endif %}>Any size</option><option value="small" {% if filters.scale == 'small' %}selected{% endif %}>0-99 employees</option><option value="medium" {% if filters.scale == 'medium' %}selected{% endif %}>0-499 employees</option></select></label>
+<label>Contact<select name="direct"><option value="0" {% if not filters.directOnly %}selected{% endif %}>All contacts</option><option value="1" {% if filters.directOnly %}selected{% endif %}>Titles selected in my matching configuration</option></select></label>
+<button type="submit">Filter</button></form></header>
+<section class="startup-grid">{% for company in result.companies %}<article class="panel startup-company"><h2>{{ company.name }}</h2>
+{% for job in company.jobs %}<section class="startup-job"><h3><a href="{{ job.job_url }}" target="_blank" rel="noopener noreferrer">{{ job.job_name }}</a></h3><p>{{ job.city_name }} · {{ job.brand_scale_name }} · {{ job.salary_desc }}</p><p>{{ job.boss_name }} / {{ job.contactCategory }}</p><p class="subtle">Priority matches: {{ job.score }} · Observed: {{ job.lastObserved }}</p><p><a href="/agent?job={{ job.job_id | urlencode }}">Draft a message</a></p><ul>{% for reason in job.reasons %}<li>{{ reason }}</li>{% endfor %}</ul><ul class="startup-gaps">{% for gap in job.gaps %}<li>{{ gap }}</li>{% endfor %}</ul>{% if job.description %}<details><summary>Original description</summary><pre>{{ job.description }}</pre></details>{% endif %}</section>{% endfor %}</article>{% else %}<p>No listings match the selected filters.</p>{% endfor %}</section>
+</main></body></html>
