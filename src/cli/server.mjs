@@ -17,9 +17,10 @@ async function main() {
 
   ensureAppDirectories();
   const app = createApp();
-  app.listen(argv.port, '127.0.0.1', () => {
-    console.log(`Dashboard ready at http://localhost:${argv.port}`);
+  const server=app.listen(argv.port, '127.0.0.1', () => {
+    console.log(`Dashboard ready at http://127.0.0.1:${server.address().port}`);
   });
+  server.on('error',error=>{app.locals.close();console.error(error.message);process.exitCode=1;});
 }
 
 main().catch((error) => {

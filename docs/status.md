@@ -32,7 +32,7 @@ Integration date: **2026-10-15**. JobTrending source is included at the reposito
 Tested on Windows with Node.js 22.12.0:
 
 - `npm ci` installs the locked dependencies and initializes the blank local configuration.
-- `npm test`: eleven tests pass.
+- `npm test`: fourteen tests pass.
 - Generic matching retains unrelated careers, cities, and contact types; only configured filters change inclusion.
 - Mock live search accepts a city outside the old scope and nationwide search; Settings saves the user goal.
 - Empty-data workbench, job library, company view, optional research page, and their APIs return successfully without a BOSS login.
@@ -45,8 +45,10 @@ Tested on Windows with Node.js 22.12.0:
 - Browser adapter fixtures do not prove the current logged-in BOSS website still matches every selector.
 - The drafting prompt is tested; a real model call from a freshly configured user account is not part of the tests.
 - The normal-browser login launcher currently discovers Windows Chrome/Edge paths. Other operating systems are not verified.
-- Robotics report generation and historical cleanup/PDF scripts require their own collected/reviewed inputs; every historical script has not been executed.
+- Research export/review/report/audit, cleanup preview, and PDF rendering are tested with synthetic inputs. Real collected corpora and destructive cleanup execution are not exercised.
 - Live workbench search reads one page, and inbox snapshots cover loaded conversations/history. The collector handles broader configured collection separately.
 - QR recognition, WeChat app control, interview scheduling, and offer management are not implemented.
 
 The original local project remains separate and unchanged. Public-repository changes do not migrate its private database or replace its running service.
+
+The follow-up [repository audit](repository-audit.md) records additional first-run and preference fixes, privacy scope, and clean-clone validation.

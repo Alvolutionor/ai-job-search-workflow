@@ -6,8 +6,8 @@ import { roboticsSkillRules } from '../../config/robotics-skill-rules.mjs';
 import { loadConfig, resolveTargetCities } from './config.mjs';
 import { configDir, dataDir } from './paths.mjs';
 
-export const liveScopeConfigPath = path.join(configDir, 'robotics-shanghai-shenzhen.config.json');
-export const liveVerdictPath = path.join(dataDir, 'research', 'robotics-review-verdicts-shsz.json');
+export const liveScopeConfigPath = path.resolve(process.env.JOBTRENDING_RESEARCH_CONFIG || path.join(configDir, 'research.config.json'));
+export const liveVerdictPath = path.join(dataDir, 'research', 'robotics-review-verdicts-live.json');
 const legacyVerdictPath = path.join(dataDir, 'research', 'robotics-review-verdicts.json');
 
 export function excerptFor(description, groups) {
@@ -66,7 +66,7 @@ export function computeLiveSkillCounts(sqlite) {
   return {
     generatedAt: new Date().toISOString(),
     source: 'BOSS Zhipin',
-    scope: '上海、深圳',
+    scope: (() => { const config=loadConfig(liveScopeConfigPath); return config.cityMode==='nationwide' ? 'Nationwide' : resolveTargetCities(config).map(city=>city.name).join(', '); })(),
     candidateJobs: scoped.length,
     capturedDescriptionJobs: scoped.filter((job) => job.description).length,
     reviewableDescriptionJobs: reviewable.length,

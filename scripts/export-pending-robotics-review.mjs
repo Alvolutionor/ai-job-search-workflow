@@ -16,5 +16,6 @@ const pending = listScopedJobs(db)
   .map(({ id, title, company, city, description }) => ({ id, title, company, city, description }));
 db.close();
 
+fs.mkdirSync(path.dirname(outputPath), {recursive:true});
 fs.writeFileSync(outputPath, `${JSON.stringify(pending, null, 2)}\n`);
 console.log(`Exported ${pending.length} pending robotics review jobs to ${outputPath}`);

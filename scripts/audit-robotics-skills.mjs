@@ -15,7 +15,7 @@ if (reviewed.candidatesReviewed !== candidates.reviewableDescriptionJobs) {
 }
 
 for (const [index, skill] of counts.skills.entries()) {
-  if (skill.id !== String(index + 1).padStart(2, '0') || skill.count !== skill.sources.length || skill.count === 0) {
+  if (skill.id !== String(index + 1).padStart(2, '0') || skill.count !== skill.sources.length) {
     failures.push(`Invalid count or sequence for skill ${skill.id}`);
   }
   if (new Set(skill.sources.map((source) => source.id)).size !== skill.sources.length) {

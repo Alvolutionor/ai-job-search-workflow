@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import Database from 'better-sqlite3';
+import { liveScopeConfigPath } from '../src/lib/robotics-skills.mjs';
 
 const root = path.resolve('.');
 const databasePath = path.join(root, 'data', 'jobs.sqlite');
-const configPath = path.join(root, 'config', 'robotics-shanghai-shenzhen.config.json');
+const configPath = liveScopeConfigPath;
 const verdictPath = path.join(root, 'data', 'research', 'robotics-review-verdicts.json');
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 const keywords = [...new Set(config.keywords)];

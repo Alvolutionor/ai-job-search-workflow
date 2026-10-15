@@ -3,13 +3,6 @@ import { humanSleep } from './humanize.mjs';
 import { clipText } from './utils.mjs';
 import { fetchJobDetailViaClick } from './job-detail.mjs';
 
-function titlePriority(title) {
-  if (/产品经理|招聘|销售|售前|售后|客服|商务|CTO|技术合伙人|老师|讲师|培训|教师|教育/i.test(title)) return -1;
-  if (/机器人|机械臂|具身|四足|轮足|ROS|SLAM/i.test(title)) return 2;
-  if (/仿真|感知|导航|运动规划|运动控制|激光雷达/i.test(title)) return 1;
-  return 0;
-}
-
 export function selectBalancedJobs(jobs, keywords, limit) {
   const buckets = new Map(keywords.map((keyword) => [keyword, []]));
   for (const job of jobs) {
@@ -22,8 +15,7 @@ export function selectBalancedJobs(jobs, keywords, limit) {
   while (selected.length < limit && [...buckets.values()].some((bucket) => bucket.length > 0)) {
     for (const bucket of buckets.values()) {
       if (bucket.length > 0 && selected.length < limit) {
-        bucket.sort((a, b) => titlePriority(b.job_name) - titlePriority(a.job_name)
-          || (cityCounts.get(a.city_name) ?? 0) - (cityCounts.get(b.city_name) ?? 0)
+        bucket.sort((a, b) => (cityCounts.get(a.city_name) ?? 0) - (cityCounts.get(b.city_name) ?? 0)
           || b.last_observed_at_ms - a.last_observed_at_ms);
         const job = bucket.shift();
         selected.push(job);

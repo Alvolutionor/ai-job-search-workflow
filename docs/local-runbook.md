@@ -13,7 +13,7 @@ npx playwright install chromium
 
 Set `keywords`, `cityMode`, and the relevant city fields in `config/search.config.json` to match the user's search. The collector supports all-city, custom-city, and nationwide modes. The commands below use that general configuration.
 
-Set optional matching criteria in `config/matching.config.json`, your profile in `config/candidate-profile.json`, and drafting preferences in `config/recruiting-policy.json`. Installation creates these from generic examples without overwriting existing files. The optional robotics research module uses its own sample configurations.
+Set optional matching criteria in `config/matching.config.json`, your profile in `config/candidate-profile.json`, and drafting preferences in `config/recruiting-policy.json`. Installation creates these from generic examples without overwriting existing files. The optional robotics research module reads your local `config/research.config.json`, initialized with a nationwide sample. Set `JOBTRENDING_RESEARCH_CONFIG` to use another file.
 
 ## 2. Log in and inspect a small search
 
@@ -79,7 +79,31 @@ node ./scripts/validate-verdicts.mjs ./data/research/robotics-review-candidates.
 
 It checks duplicate IDs, missing/extra IDs, boolean decisions, and nonempty reasons. Validation does not judge whether the relevance decision is substantively correct. Do not replace the live verdict corpus with an incomplete draft.
 
-The application also provides `npm run research:boss`, `npm run research:report`, and `npm run research:audit` for its research export/report/audit pipeline. Inspect those scripts' expected input artifacts before rebuilding a historical report; they are distinct from the incremental pending-review workflow.
+The complete batch pipeline is:
+
+```powershell
+npm run research:boss
+npm run research:candidates
+npm run research:prepare
+```
+
+Fill every pending decision in `data/research/robotics-review-draft.json`, then:
+
+```powershell
+npm run research:validate
+Copy-Item -LiteralPath data/research/robotics-review-draft.json -Destination data/research/robotics-review-verdicts.json
+npm run research:export
+npm run research:report
+npm run research:audit
+```
+
+Zero matches for an individual skill are valid. Generated data and reports stay outside Git. To export a job-array JSON file as PDF:
+
+```powershell
+node ./scripts/make-pdf.mjs ./data/my-jobs.json ./data/research/my-jobs.pdf "My search results"
+```
+
+The title and input/output paths are supplied by the user. This export does not impose a domain or city order.
 
 ## 5. Open the local dashboard
 
@@ -89,11 +113,11 @@ npm run web
 
 | Route | Purpose |
 | --- | --- |
-| `http://localhost:3333/jobs` | Historical job table and filtering. |
-| `http://localhost:3333/robotics` | Reviewed skill counts, source roles, and practice checks. |
-| `http://localhost:3333/startups` | Company-grouped matching with fit reasons and gaps. |
-| `http://localhost:3333/agent?job=JOB_ID` | Earlier draft-only page for manually supplied conversation text. Replace `JOB_ID` with an actual local ID. |
-| `http://localhost:3333/workbench` | Current queue, conversation sync, drafts, confirmation, and handoff records. |
+| `http://127.0.0.1:3333/jobs` | Historical job table and filtering. |
+| `http://127.0.0.1:3333/robotics` | Reviewed skill counts, source roles, and practice checks. |
+| `http://127.0.0.1:3333/startups` | Company-grouped matching with fit reasons and gaps. |
+| `http://127.0.0.1:3333/agent?job=JOB_ID` | Earlier draft-only page for manually supplied conversation text. Replace `JOB_ID` with an actual local ID. |
+| `http://127.0.0.1:3333/workbench` | Current queue, conversation sync, drafts, confirmation, and handoff records. |
 
 The root route opens the workbench. The service binds to the local machine.
 

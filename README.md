@@ -6,7 +6,7 @@ The runnable application, tests, configuration examples, and workflow guides are
 
 ## Quick start
 
-Requirements: Node.js 20.19 or newer, npm, and Chrome or Edge for the current Windows login launcher. AI drafting additionally uses an authenticated local Claude CLI.
+Requirements: Node.js 20.19+ or 22.12+ (the supported LTS lines) and npm. The login launcher discovers Chrome/Edge or uses the Chromium installed below; `JOBTRENDING_BROWSER_PATH` can select another installation. AI drafting additionally uses an authenticated local Claude CLI.
 
 ```powershell
 git clone https://github.com/Alvolutionor/ai-job-search-workflow.git
@@ -16,9 +16,9 @@ npx playwright install chromium
 npm run web
 ```
 
-Visit `http://localhost:3333/workbench`. The empty-data workbench and job library can open before logging into BOSS or configuring a model.
+Visit `http://127.0.0.1:3333/workbench`. The empty-data workbench and job library can open before logging into BOSS or configuring a model.
 
-Installation creates local configuration files from the examples without replacing existing files. Set up your search and profile before collecting listings or generating personal replies.
+Puppeteer reuses the detected browser; its duplicate browser download is disabled. Installation creates local configuration files from the examples without replacing existing files. Set up your search and profile before collecting listings or generating personal replies.
 
 ## Configure your search
 
@@ -28,6 +28,7 @@ Installation creates local configuration files from the examples without replaci
 | `config/matching.config.json` | Optional city/keyword exclusions, preferred contact titles, and priority terms. Empty lists retain all jobs; contacts are not prioritized by default. |
 | `config/candidate-profile.json` | Your experience, skills, projects, targets, and preferences for drafting. |
 | `config/recruiting-policy.json` | Your communication goal, output language, tone, and contact preference. |
+| `config/research.config.json` | Optional robotics research scope. Starts nationwide; choose your own keywords and cities. `JOBTRENDING_RESEARCH_CONFIG` can select another scope file. |
 | `data/resumes/` | Local PDF choices. Override with `JOBTRENDING_RESUME_DIR`. |
 
 These local files and runtime data are ignored by Git. The committed `*.example.json` files contain no personal profile or recruiting history.
@@ -72,9 +73,9 @@ Drafting sends the necessary profile/job/conversation context to the configured 
 npm test
 ```
 
-Eleven local tests cover configurable matching across unrelated careers and cities, user-directed prompts, mocked live search, empty-data pages/APIs, draft invalidation, duplicate submission, platform attachments, browser adapters, and the workbench UI. Browser fixtures use intercepted pages and do not contact real recruiters.
+Fourteen local tests cover configurable matching across unrelated careers and cities, user-directed prompts, mocked live search, empty-data pages/APIs, draft invalidation, duplicate submission, platform attachments, browser adapters, the workbench UI, first-run database fields, unbiased detail selection, and the research/report/PDF pipeline. Browser fixtures use intercepted pages and do not contact real recruiters.
 
-Verified on Windows with Node.js 22.12.0. Fresh installation and empty-data startup are tested. Real logged-in BOSS selectors, message/attachment delivery, and an end-to-end model call from a new account remain unverified for this public version.
+Verified locally on Windows with Node.js 22.12.0. A GitHub Actions matrix checks Node.js 20/22 on Windows, Linux, and macOS. Fresh installation and empty-data startup are tested. Real logged-in BOSS selectors, message/attachment delivery, and an end-to-end model call from a new account remain unverified for this public version.
 
 ## Guides and templates
 
@@ -82,6 +83,7 @@ Verified on Windows with Node.js 22.12.0. Fresh installation and empty-data star
 - [Operator runbook](docs/local-runbook.md)
 - [Evidence and matching](docs/evidence-and-matching.md)
 - [Implementation and verification status](docs/status.md)
+- [Repository audit and remaining limits](docs/repository-audit.md)
 - [Data handling](docs/data-handling.md)
 - [Candidate profile worksheet](templates/candidate-evidence.md)
 - [Search and role review](templates/search-and-role-review.md)

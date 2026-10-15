@@ -1,8 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import puppeteer from 'puppeteer';
+import { pathToFileURL } from 'node:url';
+import { findSupportedBrowserExecutable } from '../src/lib/local-browser.mjs';
 
-const rows = JSON.parse(fs.readFileSync('data/judge/final_relevant.json', 'utf8'));
+const inputPath=path.resolve(process.argv[2] || './data/judge/final_relevant.json');
+const outPdf=path.resolve(process.argv[3] || './data/research/relevant-jobs.pdf');
+const outHtml=outPdf.replace(/\.pdf$/i,'')+'.html';
+const title=process.argv[4] || 'Job search results';
+if(!fs.existsSync(inputPath)) throw new Error('Provide a JSON job array: node scripts/make-pdf.mjs <input.json> [output.pdf] [title]');
+const rows=JSON.parse(fs.readFileSync(inputPath,'utf8'));
+if(!Array.isArray(rows)) throw new Error('Input must be a JSON job array.');
+fs.mkdirSync(path.dirname(outPdf),{recursive:true});
 
 function cleanActivity(s) {
   if (!s) return '';
@@ -25,10 +34,9 @@ for (const r of rows) {
   byCity.get(c).push(r);
 }
 
-const cityOrder = ['北京', '天津', '大连', '沈阳'];
-const orderedCities = [...cityOrder.filter((c) => byCity.has(c)), ...[...byCity.keys()].filter((c) => !cityOrder.includes(c))];
+const orderedCities = [...byCity.keys()];
 
-const generatedAt = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+const generatedAt = new Date().toLocaleString('zh-CN', {});
 
 const css = `
 * { box-sizing: border-box; }
@@ -68,7 +76,7 @@ function activityClass(a) {
   return '';
 }
 
-let body = `<h1>环保 · 废气/水处理相关岗位汇总</h1>`;
+let body = `<h1>${esc(title)}</h1>`;
 body += `<div class="subtitle">由 jobtrending 从 BOSS 直聘抓取 · LLM 判定相关 · 生成于 ${esc(generatedAt)} · 共 ${rows.length} 个岗位</div>`;
 
 for (const city of orderedCities) {
@@ -94,16 +102,14 @@ for (const city of orderedCities) {
   body += `</table></section>`;
 }
 
-const html = `<!doctype html><html><head><meta charset="utf-8"><title>环保岗位汇总</title><style>${css}</style></head><body>${body}</body></html>`;
+const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>${css}</style></head><body>${body}</body></html>`;
 
-const outHtml = path.resolve('data/judge/relevant-jobs.html');
-const outPdf = path.resolve('data/judge/relevant-jobs.pdf');
 fs.writeFileSync(outHtml, html);
 console.log('HTML written:', outHtml);
 
-const browser = await puppeteer.launch({ headless: 'new' });
+const browser = await puppeteer.launch({ headless: true, executablePath: findSupportedBrowserExecutable() });
 const page = await browser.newPage();
-await page.goto('file:///' + outHtml.replace(/\\/g, '/'), { waitUntil: 'networkidle0' });
+await page.goto(pathToFileURL(outHtml).href, { waitUntil: 'networkidle0' });
 await page.pdf({
   path: outPdf,
   format: 'A4',

@@ -1,0 +1,23 @@
+{
+  "keywords": [
+    "机器人软件工程师",
+    "机器人算法工程师",
+    "ROS2",
+    "SLAM",
+    "机器人感知",
+    "机器人仿真",
+    "运动规划",
+    "机器人控制"
+  ],
+  "cityMode": "nationwide",
+  "cityCodes": [],
+  "cityNames": [],
+  "excludedCityCodes": [],
+  "excludedCityNames": [],
+  "pageSize": 30,
+  "minDelayMs": 4000,
+  "maxDelayMs": 8000,
+  "requestTimeoutMs": 30000,
+  "retryCount": 0,
+  "headless": false
+}

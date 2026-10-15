@@ -8,7 +8,9 @@ const candidates = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
 const verdicts = JSON.parse(fs.readFileSync(verdictPath, 'utf8'));
 const verdictById = new Map(verdicts.map((row) => [row.id, row]));
 
-if (verdictById.size !== verdicts.length || candidates.length !== verdicts.length
+if (new Set(candidates.map(job=>job.id)).size !== candidates.length
+    || verdicts.some(row=>typeof row.relevant!=='boolean' || !String(row.reason ?? '').trim())
+    || verdictById.size !== verdicts.length || candidates.length !== verdicts.length
     || candidates.some((job) => !verdictById.has(job.id))) {
   throw new Error('Review verdicts do not match candidate job IDs exactly');
 }

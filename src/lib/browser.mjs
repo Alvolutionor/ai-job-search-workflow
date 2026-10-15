@@ -2,6 +2,7 @@
 // Uses the same puppeteer-extra plugin stack (stealth + laodeng + anonymize-ua) and the same
 // cookie + localStorage loading pattern.
 
+import { findSupportedBrowserExecutable } from './local-browser.mjs';
 import { loadCookieFile } from './cookies.mjs';
 import { loadLocalStorageFile } from './local-storage.mjs';
 import { normalizeString, sleep } from './utils.mjs';
@@ -67,6 +68,7 @@ export async function launchBossSession({ headless = false } = {}) {
   const pptr = await ensurePuppeteer();
   const browser = await pptr.launch({
     headless,
+    executablePath: findSupportedBrowserExecutable(),
     ignoreHTTPSErrors: true,
     defaultViewport: {
       width: 1440,

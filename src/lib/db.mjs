@@ -39,7 +39,6 @@ export class JobDatabase {
   }
 
   init() {
-    this.migrate();
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS jobs (
         job_id TEXT PRIMARY KEY,
@@ -121,6 +120,7 @@ export class JobDatabase {
       CREATE INDEX IF NOT EXISTS idx_job_hits_search_city ON job_hits (search_city_code);
       CREATE INDEX IF NOT EXISTS idx_crawl_tasks_status ON crawl_tasks (status);
     `);
+    this.migrate();
   }
 
   prepareStatements() {

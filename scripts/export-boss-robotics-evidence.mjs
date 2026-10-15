@@ -3,9 +3,10 @@ import path from 'node:path';
 
 import Database from 'better-sqlite3';
 
+import { liveScopeConfigPath } from '../src/lib/robotics-skills.mjs';
 import { minReviewableDescriptionLength } from '../config/robotics-review-policy.mjs';
 
-const searchConfigPath = path.resolve(process.argv[2] ?? './config/robotics.config.json');
+const searchConfigPath = path.resolve(process.argv[2] ?? liveScopeConfigPath);
 const outputPath = path.resolve(process.argv[3] ?? './data/research/boss-robotics-evidence.json');
 const asOfDate = process.argv[4] ?? new Date().toISOString().slice(0, 10);
 const asOf = new Date(`${asOfDate}T23:59:59.999Z`);

@@ -49,7 +49,15 @@ export async function waitForDebugPort(port, timeoutMs = 15_000) {
 }
 
 export function findSupportedBrowserExecutable() {
+  if(process.env.JOBTRENDING_BROWSER_PATH) {
+    if(!fs.existsSync(process.env.JOBTRENDING_BROWSER_PATH)) throw new Error('JOBTRENDING_BROWSER_PATH does not point to an executable.');
+    return process.env.JOBTRENDING_BROWSER_PATH;
+  }
   const candidates = [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+    '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser',
+    chromium.executablePath(),
     process.env.LOCALAPPDATA && `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
     process.env.PROGRAMFILES && `${process.env.PROGRAMFILES}\\Google\\Chrome\\Application\\chrome.exe`,
     process.env['PROGRAMFILES(X86)'] && `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome\\Application\\chrome.exe`,
@@ -64,7 +72,7 @@ export function findSupportedBrowserExecutable() {
     }
   }
 
-  throw new Error('Chrome/Edge executable not found. Install Chrome or Edge first.');
+  throw new Error('No supported browser found. Run npx playwright install chromium or set JOBTRENDING_BROWSER_PATH.');
 }
 
 export function launchNormalBrowserForBossLogin({
