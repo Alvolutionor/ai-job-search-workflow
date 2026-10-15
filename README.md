@@ -6,7 +6,7 @@ The runnable application, tests, configuration examples, and workflow guides are
 
 ## Quick start
 
-Requirements: Node.js 20.19+ or 22.12+ (the supported LTS lines) and npm. The login launcher discovers Chrome/Edge or uses the Chromium installed below; `JOBTRENDING_BROWSER_PATH` can select another installation. AI drafting additionally uses an authenticated local Claude CLI.
+Requirements: Node.js 20.19+ or 22.12+ (tested major versions; Node.js 22 is recommended) and npm. The login launcher discovers Chrome/Edge or uses the Chromium installed below; `JOBTRENDING_BROWSER_PATH` can select another installation. AI drafting additionally uses an authenticated local Claude CLI.
 
 ```powershell
 git clone https://github.com/Alvolutionor/ai-job-search-workflow.git
