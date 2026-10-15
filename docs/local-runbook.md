@@ -11,7 +11,9 @@ npm install
 npx playwright install chromium
 ```
 
-Use the application's own search configuration. The focused file inspected for this summary is `config/robotics-ai-startups.config.json`; it targets Shanghai/Shenzhen and searches robotics, AI applications, full-stack work, agents, smart hardware, and voice interaction.
+Set `keywords`, `cityMode`, and the relevant city fields in `config/search.config.json` to match the user's search. The collector supports all-city, custom-city, and nationwide modes. The commands below use that general configuration.
+
+Some specialized pages and review scripts were written for one person's search. Their domain/city restrictions are current implementation limits, not preferences other users are expected to adopt. Changing the collector configuration does not update hard-coded matching pages.
 
 ## 2. Log in and inspect a small search
 
@@ -23,19 +25,19 @@ Complete login/security verification manually and keep the browser open. Then co
 
 ```powershell
 node ./src/cli/collect-cookies.mjs --cookies-only
-node ./src/cli/crawl.mjs --config ./config/robotics-ai-startups.config.json --dry-run --city-limit 1 --keyword-limit 1
+node ./src/cli/crawl.mjs --config ./config/search.config.json --dry-run --city-limit 1 --keyword-limit 1
 ```
 
 Collect one keyword-city list sample without retrieving every description:
 
 ```powershell
-node ./src/cli/crawl.mjs --config ./config/robotics-ai-startups.config.json --city-limit 1 --keyword-limit 1 --skip-jd
+node ./src/cli/crawl.mjs --config ./config/search.config.json --city-limit 1 --keyword-limit 1 --skip-jd
 ```
 
 After inspecting access and saved results, run the configured scope:
 
 ```powershell
-node ./src/cli/crawl.mjs --config ./config/robotics-ai-startups.config.json
+node ./src/cli/crawl.mjs --config ./config/search.config.json
 ```
 
 Omitting `--skip-jd` also requests descriptions. Existing task progress is reused. `--force` restarts matching tasks from page one; it is not required for ordinary continuation. `--skip-failed` leaves failed tasks for a separate retry run.
@@ -45,13 +47,15 @@ Use direct `node` invocations when passing options: the local README records opt
 ## 3. Retrieve missing descriptions
 
 ```powershell
-node ./src/cli/enrich.mjs --config ./config/robotics-ai-startups.config.json --limit 10 --dry-run
-node ./src/cli/enrich.mjs --config ./config/robotics-ai-startups.config.json --limit 10
+node ./src/cli/enrich.mjs --config ./config/search.config.json --limit 10 --dry-run
+node ./src/cli/enrich.mjs --config ./config/search.config.json --limit 10
 ```
 
 The detail queue selects jobs missing descriptions across configured keywords and cities. The current default avoids retrying failed detail attempts for six hours. This is an implementation detail of selection, not evidence that a listing is unavailable.
 
-## 4. Review new robotics evidence
+## 4. Optional domain-specific research scripts
+
+The following existing scripts belong to a robotics research module. Use them when that module matches the user's chosen research; they are not required for other job searches. A different domain needs its own relevance definition and extraction rules.
 
 Export pending roles:
 
@@ -96,7 +100,7 @@ The root route opens the robotics dashboard. The service binds to the local mach
 ## 6. Operate the recruiting workbench
 
 1. Use **Open BOSS login**, complete verification, keep that browser open, then **Connect**.
-2. Search the historical pool or request a current Shanghai/Shenzhen search page. The live-search endpoint retrieves the first page only.
+2. Search the historical pool or use the existing live-search endpoint. That endpoint currently has a hard-coded two-city scope and retrieves the first page only; change its source to support a different scope. The general collector uses the search configuration described above.
 3. Add a reviewed role to the queue. Selecting a local resume records intent only.
 4. Review and confirm the contact action for that specific role.
 5. Sync the inbox and read a selected conversation. Only loaded conversation data/history is available.

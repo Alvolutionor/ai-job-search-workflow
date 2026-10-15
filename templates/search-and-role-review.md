@@ -20,11 +20,11 @@ Copy this template into a private workspace.
 - Publication date and source, if supplied:
 - Full description available:
 - Current opening checked, when and how:
-- Robotics/domain relevance verdict and reason:
+- Relevance to the user's search brief and reason:
 
 | Requirement or work responsibility | Description evidence | Candidate evidence | Gap or next question |
 | --- | --- | --- | --- |
-| Example: device monitoring interface | Exact source reference | Verified comparable work | Ask what the product currently lacks |
+| Responsibility or requirement from this listing | Source reference | Relevant user-supplied background, if any | Question the user wants answered |
 
 ## Company and contact
 

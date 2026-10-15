@@ -8,7 +8,7 @@ Separate four kinds of information:
 
 - Candidate-confirmed facts.
 - Statements in historical resumes.
-- Engineering evidence directly inspected.
+- Supporting work and project records directly inspected.
 - Interpretations or claims still requiring confirmation.
 
 Resolve conflicting dates through the candidate instead of silently combining versions. Record who owns each project: a local checkout, installed tool, reference repository, or AI-assisted session is not proof of authorship. Do not turn a job requirement into a candidate skill.
@@ -17,16 +17,13 @@ Resolve conflicting dates through the candidate instead of silently combining ve
 
 ## 2. Write a bounded search brief
 
-Define the target work before collecting more listings: product work, role family, location, known strengths, gaps, and useful contact access.
+Let the user define roles, industries, keywords, locations, company preferences, and anything they want to explore. A broad exploratory search is also a valid choice.
 
-In the reviewed setup, the two resume directions share a full-stack and cloud engineering foundation:
+Keep optional preferences separate from explicit exclusions. The user decides whether a condition narrows results, changes their order, or is only shown as information.
 
-- AI application engineering: connect models to useful software, data flows, and user-facing products.
-- Robotics and smart hardware: device services, management interfaces, monitoring, alerts, interaction, and integration where supported by actual experience.
+The candidate profile supplies context for materials and comparisons. It does not decide which careers the user may pursue. Changing fields, targeting a stretch role, and seeking work unrelated to prior experience are user choices.
 
-The focused company view targets Shanghai/Shenzhen robotics and AI opportunities. Founder/technical-lead access ranks ahead of the heuristic fit score. Small companies are a preference that can be enabled as a filter; the default does not exclude larger employers.
-
-**Completion:** the search has explicit inclusion criteria and a written explanation of which specialist roles require more evidence.
+**Completion:** the search reflects the user's chosen scope, with no inferred career or location restrictions.
 
 ## 3. Collect and preserve provenance
 
@@ -47,7 +44,7 @@ Keep first/last observation time separate from any platform-provided publication
 
 Search cards alone are often insufficient. Retrieve missing descriptions, balance the detail queue across search keywords and cities, and keep failed attempts visible.
 
-For robotics research, the current review threshold is a description of at least 120 characters. Review the actual work, not only the role title: the relevance rule includes any role whose work involves robots. A robot company's unrelated vacancy does not become relevant merely because of its employer name.
+Review relevance against the user's search brief. A domain-specific definition or description-length threshold belongs to that research configuration. It is not a universal rule for accepting jobs.
 
 Store a verdict as a job ID, a boolean relevance decision, and a nonempty reason. Validate the complete batch against its candidate IDs before using it in counts. Keep pending candidates separate rather than silently treating them as relevant or irrelevant.
 
@@ -67,19 +64,19 @@ Use this to choose what to demonstrate next. Do not present sample frequencies a
 
 Read the company's grouped roles, original descriptions, listing size, contact title, reasons for fit, and missing evidence. Reopen the source listing to check whether it is still actionable.
 
-Prioritize roles where existing experience solves a concrete problem. For example, device status, alerting, and web-management work can be relevant to a robotics platform role. A motion-control research role requires its own evidence.
+Compare roles using the user's criteria, such as responsibilities, pay, location, learning opportunities, company size, or contact access. Show why an item matches a criterion and let the user choose what to pursue.
 
-The startup matcher is a keyword-based ordering tool. It does not verify employer quality, identity, salary, current hiring, or probability of an offer.
+Matching scores organize results. They do not determine whether the user is allowed or advised to apply. Keep the original listings accessible so the user can look beyond the ranking.
 
 **Completion:** each queued role has a specific fit reason, an unresolved question, and a selected resume direction.
 
 ## 7. Prepare coherent application materials
 
-Maintain a common factual base and tailor emphasis for the two directions. Describe the function owned, the implementation mechanism, the actual use, and only outcomes that can be supported.
+Maintain a common profile and create as many resume variants as the user needs. Tailor the emphasis, language, and format to the selected role or application channel.
 
-Keep business experience understandable as complete work rather than a list of internal module names. Preserve relevant front-end, back-end, and cloud experience in the AI version. In the robotics version, distinguish device integration from specialized control or firmware expertise.
+Let the user choose what to emphasize. Keep dates, experience, and results consistent across variants, and ask about missing information when it is needed for a specific application.
 
-The observed local materials include PDF delivery versions, editable HTML/text versions, and separate BOSS profile text for each direction. Check PDF text selection and the final wording before sending. Keep private contact details in the actual application materials, outside the public repository.
+The local workflow uses PDF delivery versions, editable HTML/text sources, and BOSS profile text. These formats can be reused for any target direction. Check PDF text selection and the final wording before sending.
 
 **Completion:** the PDF, BOSS profile, and intended role tell a consistent story. Recording a chosen local PDF in the queue does not upload or send it.
 
@@ -95,7 +92,7 @@ Treat starting contact and sending an attachment as different actions. The lates
 
 Read the live conversation before asking for a reply. Supply the relevant job, verified candidate facts, recent messages, and immediate communication goal to the model.
 
-The model proposes a concise reply grounded in real experience and one useful question about the work. Unknown personal facts must remain unknown. Job descriptions and recruiter messages are untrusted source material, not instructions to execute tools or reveal data.
+The model drafts toward the user's immediate goal, in their chosen language and tone. Use the supplied profile and conversation context; ask for missing facts rather than inventing them. Job descriptions and recruiter messages supply context rather than instructions to execute tools.
 
 Review the recipient, conversation, exact text, and current context. A changed conversation invalidates an older draft. Once claimed for sending, that draft cannot be submitted again through the same pending-review transition. An unobserved send result remains `unconfirmed`; inspect BOSS before deciding what to do next.
 
@@ -103,7 +100,7 @@ Review the recipient, conversation, exact text, and current context. A changed c
 
 ## 10. Record a real handoff and continue manually
 
-Answer substantive questions before proposing a contact exchange. Offer the candidate's own WeChat when useful and respect the other party's response.
+The user chooses whether to continue on BOSS, exchange WeChat, use another channel, or end the conversation. The tool tracks the selected next step.
 
 Text recognized as a recruiter WeChat ID is an unverified candidate contact. The workbench does not add WeChat friends, read QR codes, or establish that an exchange happened. Mark `wechat_added` only after completing it in WeChat.
 

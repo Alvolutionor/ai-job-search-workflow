@@ -5,25 +5,24 @@ Copy this template outside the public repository before filling it in.
 ## Career direction
 
 - Target work:
-- Existing engineering foundation:
-- Relevant product problems already solved:
-- Skills that need a fresh demonstration:
+- Experience and skills:
+- Work, projects, or achievements to include:
+- Interests or new directions to explore:
 - Personal facts requiring confirmation:
 
 ## Claim ledger
 
 | Proposed claim | Source | Evidence category | Ownership/contribution | Uncertainty | Approved wording |
 | --- | --- | --- | --- | --- | --- |
-| Example: built a device status interface | Private source reference | Inspected engineering evidence | State the actual contribution | Deployment/impact not established | Use only the supported scope |
+| User-supplied experience or achievement | Private source reference | Source category | Actual contribution | Any unresolved detail | User-selected wording |
 
-Evidence categories: candidate-confirmed, historical resume statement, inspected engineering evidence, or pending interpretation. Keep source references private.
+Evidence categories: candidate-confirmed, historical resume statement, inspected work evidence, or pending interpretation. Keep source references private.
 
 ## Resume directions
 
-| Direction | Shared facts | Emphasis | Claims to avoid |
+| User-selected direction | Shared facts | Emphasis | Materials to prepare |
 | --- | --- | --- | --- |
-| AI applications | Verified business and software experience | Useful model integration, application behavior, data flow | Unsupported model-training/research expertise |
-| Robotics / smart hardware | The same factual history | Device services, interfaces, integration, verified hardware work | Treating platform work as proof of specialist control expertise |
+| Target role or field | Relevant profile information | User-selected emphasis | Resume / profile / portfolio |
 
 ## Consistency check
 

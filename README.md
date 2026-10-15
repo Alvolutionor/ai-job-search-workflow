@@ -1,6 +1,6 @@
 # AI Job Search Workflow
 
-A documented, local-first workflow for turning job-market research into focused applications and useful recruiter conversations.
+A reusable, local-first job-search workflow: collect listings, organize opportunities, prepare application materials, and assist with recruiting conversations.
 
 This repository summarizes an existing Windows setup centered on BOSS Zhipin, a local `jobtrending` project, evidence-backed resumes, and AI-assisted message drafts. It contains the playbook, reusable templates, and an operator runbook. The collector and recruiting application are **not distributed here**; cloning this repository does not install them.
 
@@ -10,24 +10,28 @@ Reviewed on **2026-10-15**. The local recruiting application was being developed
 
 | Step | What happens | Output and decision |
 | --- | --- | --- |
-| 1. Establish candidate facts | Reconcile the candidate's confirmed history, resumes, project ownership, and engineering evidence. | A private source of truth, with uncertain claims kept separate. |
-| 2. Define the search | Choose role families, keywords, cities, and contact preferences. | An explicit search scope rather than an open-ended feed. |
+| 1. Establish candidate facts | Supply the experience, skills, resumes, and materials the user wants to work with. | A private source of truth, with uncertain claims kept separate. |
+| 2. Define the search | Let the user choose roles, industries, keywords, locations, and optional filters. | An explicit search scope rather than an open-ended feed. |
 | 3. Collect opportunities | Search BOSS through the candidate's logged-in browser and keep observations locally. | Deduplicated jobs, search provenance, and resumable collection tasks. |
 | 4. Read and review descriptions | Retrieve missing job descriptions and judge actual relevance by job ID. | A reviewed corpus; incomplete listings remain candidates. |
 | 5. Understand demand | Count explicit skill evidence and attach a practice check to each skill. | A learning backlog grounded in the reviewed sample. |
-| 6. Shortlist companies | Group roles by company and compare engineering fit, missing evidence, and contact access. | A small, inspectable application queue. |
-| 7. Tailor materials | Maintain AI-application and robotics/smart-hardware resume variants from the same verified history. | A selected PDF and matching BOSS profile text. |
+| 6. Shortlist companies | Group roles by company and compare them using the user's selection criteria. | An application queue chosen by the user. |
+| 7. Tailor materials | Create or select resume variants for whichever roles the user targets. | A selected PDF and matching BOSS profile text. |
 | 8. Start contact | Review a specific role before initiating BOSS communication. | A contact attempt; this does not prove an attachment was sent. |
 | 9. Draft and review replies | Read the current conversation, generate a grounded draft, edit it, and approve the exact action. | A reply with an observed result, or an explicitly unconfirmed attempt. |
 | 10. Continue the conversation | Offer a contact handoff when useful and record its actual completion. | A verified handoff or a closed conversation. Later interview and offer stages remain manual. |
 
 ## Why these steps belong together
 
-A large job database answers “what exists?” A reviewed description answers “what does this role actually require?” A verified candidate profile answers “what can I truthfully offer?” The conversation connects those answers to a real company's work.
+A job database makes opportunities searchable. Full descriptions support comparisons. A reusable profile helps prepare relevant materials and replies. The queue connects research to applications and conversations.
 
-The working search direction combines existing full-stack and cloud engineering experience with AI applications and robotics/device platforms. It does not assume that software integration experience proves current expertise in robot control, navigation, embedded firmware, or model research.
+## User-controlled goals
 
-The focused company search currently covers Shanghai and Shenzhen. Direct access to founders or technical leads is prioritized; company size is unrestricted by default. Small-company and direct-contact filters can narrow the set when wanted. These are configurable preferences, not guarantees about company quality or recruiter identity.
+The user chooses the career direction, target roles, industries, cities, company sizes, contact preferences, and selection criteria. The workflow supports exploring a new field, applying for familiar roles, broad market research, or a narrowly targeted search.
+
+Search filters, ranking criteria, resume emphasis, and drafting goals follow those choices. The workflow does not prescribe an industry, infer what someone should pursue from their background, or make a matching score an eligibility requirement.
+
+Some pages in the original local application contain settings written for one search. Their implementation limits are documented in the [local runbook](docs/local-runbook.md) and [status notes](docs/status.md); they are not defaults for this reusable workflow.
 
 ## Read the playbook
 

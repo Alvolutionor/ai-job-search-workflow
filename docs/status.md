@@ -12,11 +12,13 @@ Source review date: **2026-10-15**. This repository documents a local setup; it 
 | Recruiting state and actions | `src/lib/recruiting-store.mjs`, `src/server/recruiting-router.mjs` | Queue, snapshots, context versions, draft states, per-action confirmation, and platform-attachment routes. |
 | AI drafts | `src/lib/recruiting-agent.mjs` | Profile-grounded prompting, configured CLI invocation, tools disabled, and draft-only model output. |
 | Regression coverage inventory | Test declarations in `tests/recruiting.test.mjs` | Tests exist for invalidation, duplicate submission, contact attribution, HTTP approval, browser adapters, and UI flow. They were not rerun for this summary. |
-| Candidate/material workflow | Candidate-confirmed profile and evidence index; resume-directory inventory and its research summary | Two factual resume directions and the need to distinguish evidence, ownership, and uncertainty. Personal content is excluded from this repository. |
+| Candidate/material workflow | Candidate-confirmed profile and evidence index; resume-directory inventory and its research summary | Reusable profile information and multiple application-material variants. Personal content is excluded from this repository. |
 
 All application paths in this table are relative to the separately existing local `jobtrending` root. They are source references, not files included in this repository. Private machine paths and source excerpts are intentionally omitted.
 
 ## Current boundaries
+
+- The source includes personalized matching and live-search restrictions, fixed score weights, domain-specific review scripts, and a specialized drafting prompt. These are limits of that local implementation, not career guidance or defaults for the reusable workflow. Source changes are required where those choices are hard-coded. This repository's generic prompt and templates let the user supply their own goals.
 
 - The local application is evolving. The newest router includes sending an attachment already stored on BOSS; older README text still describes attachment sending as unimplemented. Treat the new path as implemented in source but pending real-account verification.
 - A selected local PDF is only a queue preference. It is not automatically uploaded by that action.

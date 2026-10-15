@@ -1,59 +1,45 @@
-# Evidence and matching rules
+# Evidence and matching
 
-## Keep different claims separate
+## Start with the user's criteria
 
-| Observation | What it supports | What it does not establish |
-| --- | --- | --- |
-| A job was collected on a date | The collector observed that listing then. | The original publication date or current hiring status. |
-| A nationwide search completed | That national search task completed. | Complete coverage of all cities or every listing. |
-| A job has a 120-character description | It meets the local minimum review threshold. | Relevance or description quality without review. |
-| A reviewer accepted a job ID | That reviewer judged its work relevant, with a recorded reason. | That every requirement fits the candidate. |
-| A skill is explicitly mentioned | That skill appears in that reviewed job's description. | The candidate has the skill or the whole market demands it at that frequency. |
-| A listing labels a contact CEO/CTO | The listing makes that title claim. | Independent identity verification or a guaranteed direct decision-maker conversation. |
-| A local project exists | The project is present on the machine. | Candidate authorship or ownership of all its code. |
-| A draft was generated | Proposed text is available for review. | A message was sent or received. |
-| A send is marked confirmed | The adapter observed its expected confirmation. | A recruiter read it, replied, or offered an interview. |
+The user defines relevance and priority. Industry, role, location, compensation, company size, working arrangements, and contact access are possible criteria, not built-in preferences.
 
-## Reviewed skill counts
+For each condition, distinguish:
 
-The inspected pipeline uses relevance verdicts and descriptions of at least 120 characters. It preserves job IDs, source URLs, and excerpts for explicit skill matches. A distinct job counts once for each matched skill. The current report/audit code describes 50 skill rules; this is a versioned implementation scope, not a permanent claim about the field.
+- **Filter:** exclude results only when the user has chosen that exclusion.
+- **Ranking signal:** change the order while leaving the other results accessible.
+- **Information:** show the field without affecting inclusion or order.
 
-The live robotics dashboard is scoped to Shanghai/Shenzhen. Broader national/regional crawl configurations also exist. Do not mix their denominators or reuse an older report total as a live dashboard count.
+A candidate's background can inform comparisons and drafting. It does not set a limit on the roles they can explore or apply for. A career change or stretch application does not need approval from the matching system.
 
-## Current company matching
+## Make results inspectable
 
-The matcher first restricts rows to Shanghai/Shenzhen and requires robotics-related text. It excludes detected intermediaries, training/career-coaching roles, and some unnamed-company listings. These are keyword filters with possible false positives and false negatives.
+Show the original listing, the matching criterion, the supporting text, and any missing fields. If a score is used, document its inputs so the user can understand what caused the ordering.
 
-Defaults allow all company sizes, require AI evidence, and do not require a direct contact. The optional small-company filter accepts the listing's `0-20` and `20-99` employee bands. The broader size filter additionally accepts `100-499`.
+Keep search relevance separate from candidate similarity: a listing can match the search perfectly while asking for experience the candidate has not listed. The user decides what to do with that information.
 
-Eligible jobs are ordered by:
+The original local application's company matcher contains a personalized domain/city scope and fixed scoring weights. Those settings are implementation history, not a recommended scoring model for other users. Adapting that matcher requires changing its source; documenting a general workflow does not make its hard-coded rules configurable.
 
-1. Founder/technical-lead title evidence, excluding assistant/secretary titles.
-2. Heuristic score, highest first.
-3. Most recent local observation.
-4. Job ID for a deterministic tie-break.
+## Preserve useful source information
 
-Rows are then grouped by company ID, falling back to company name.
-
-| Score input in the current source | Adjustment |
+| Field or record | Meaning |
 | --- | --- |
-| Application/platform role title without a specialist title match | +8 |
-| Explicit AI/agent/multimodal/voice evidence | +4 |
-| Founder or technical-lead contact title | +5 |
-| Full-stack/platform/back-end/front-end title | +3 |
-| Description mentions selected device, web, or real-time integration technologies | +3 |
-| Description has at least 120 characters | +2 |
-| Specialist title, such as control/navigation/embedded work | -5 |
-| Detected internship/part-time/day-rate/hour-rate role | -6 |
+| Job ID | Identifies a listing across search results and review files. |
+| Search keyword and city | Records how the listing was found. |
+| First/last observed time | Records when the collector saw it. |
+| Publication date, if available | A separate date supplied by the platform. |
+| Relevance decision and reason | Records a review against the selected search brief. |
+| Skill excerpt | Shows which description supported a skill count. |
+| Send result | Separates an attempted action from an observed platform confirmation. |
 
-Scores are not calibrated probabilities. The source also emits gaps for incomplete descriptions, missing AI evidence, or deep specialist requirements. Use these gaps to decide what to ask or verify rather than hiding them behind a total score.
+## Research counts
 
-## Questions that turn a match into a useful conversation
+Count a distinct job once per skill and retain its source text. Report the reviewed sample and search scope alongside the counts. Keep incomplete and pending records visible so the user knows what was included.
 
-- What product problem would this engineer own?
-- Is the work primarily an application/platform, hardware integration, or a specialized algorithm/control role?
-- Which parts of the system need work now, and what would a first contribution look like?
-- Does the advertised contact actually lead the relevant team?
-- Which requirement is essential immediately, and which can be demonstrated through a project?
+Domain-specific skill rules, minimum description lengths, and review definitions belong to the selected research configuration. They describe that sample and should not become universal job-selection requirements.
 
-Keep unresolved candidate facts separate from unresolved employer facts. Neither should be filled with model guesses.
+## Compare opportunities
+
+Useful comparison fields include responsibilities, compensation, location, working arrangements, product or industry, experience requirements, company information, and questions the user wants answered. Use whichever fields matter to that search.
+
+The output is an organized set of options. The user chooses which opportunities to pursue and how to communicate.
